@@ -4,7 +4,9 @@
 
 MIDI_UART_Parser_TypeDef 	MIDI_UART_Rx_1;
 MIDI_UART_Parser_TypeDef 	MIDI_UART_Rx_2;
+#ifndef STM32F103x6
 MIDI_UART_Parser_TypeDef 	MIDI_UART_Rx_3;
+#endif
 
 static void Init 		(MIDI_UART_Parser_TypeDef *handler, uint8_t cable_id);
 static void MsgStart 	(MIDI_UART_Parser_TypeDef *handler, uint8_t command);
@@ -21,7 +23,9 @@ void	MIDI_UART_Parser_Init (void)
 {
 	Init (&MIDI_UART_Rx_1, MIDI_CABLE_0);
 	Init (&MIDI_UART_Rx_2, MIDI_CABLE_1);
+#if !defined (STM32F103x6)
 	Init (&MIDI_UART_Rx_3, MIDI_CABLE_2);
+#endif
 }
 
 void 	MIDI_UART_Parser_Handle		(MIDI_UART_Parser_TypeDef *handler, uint8_t byte)

@@ -15,7 +15,9 @@
 // UART Hardware
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
+#ifndef STM32F103x6
 UART_HandleTypeDef huart3;
+#endif
 
 void MIDI_Handle_USB_DataOut (uint8_t *msg, uint16_t length)
 {
@@ -28,7 +30,9 @@ MIDI_UART_Queue_TypeDef* MIDI_UART_Guess_TxQueue (UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART1) return &MIDI_UART_Queue_Tx1;
 	if (huart->Instance == USART2) return &MIDI_UART_Queue_Tx2;
+#ifndef STM32F103x6
 	if (huart->Instance == USART3) return &MIDI_UART_Queue_Tx3;
+#endif
 	return NULL;
 }
 
@@ -36,7 +40,9 @@ MIDI_UART_Parser_TypeDef* MIDI_UART_Guess_Parser (UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART1) return &MIDI_UART_Rx_1;
 	if (huart->Instance == USART2) return &MIDI_UART_Rx_2;
+#ifndef STM32F103x6
 	if (huart->Instance == USART3) return &MIDI_UART_Rx_3;
+#endif
 	return NULL;
 }
 
@@ -44,7 +50,9 @@ uint8_t MIDI_UART_Guess_CableId (UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART1) return MIDI_CABLE_0;
 	if (huart->Instance == USART2) return MIDI_CABLE_1;
+#ifndef STM32F103x6
 	if (huart->Instance == USART3) return MIDI_CABLE_2;
+#endif
 	return MIDI_CABLE_0;
 }
 
@@ -75,7 +83,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 void MIDI_UART_TxQueue_Transmit (void)
 {
-	uint8_t byte_1, byte_2, byte_3, dummy;
+	uint8_t byte_1, byte_2, dummy;
+#ifndef STM32F103x6 
+	uint8_t byte_3;
+#endif
 
 	if (MIDI_UART_Queue_Next (&MIDI_UART_Queue_Tx1, &byte_1))
 	{
@@ -87,11 +98,13 @@ void MIDI_UART_TxQueue_Transmit (void)
 		if (HAL_UART_Transmit_IT(&huart2, &byte_2, MIDI_UART_ONE_BYTE) == HAL_OK)
 			MIDI_UART_Queue_Pop (&MIDI_UART_Queue_Tx2, &dummy);
 	}
+#if !defined (STM32F103x6) 
 	if (MIDI_UART_Queue_Next (&MIDI_UART_Queue_Tx3, &byte_3))
 	{
 		if (HAL_UART_Transmit_IT(&huart3, &byte_3, MIDI_UART_ONE_BYTE) == HAL_OK)
 			MIDI_UART_Queue_Pop (&MIDI_UART_Queue_Tx3, &dummy);
 	}
+#endif
 }
 
 void 	MIDI_UART_Dispatch 			(void)
@@ -113,7 +126,10 @@ void MIDI_UART_Dispatch_Msg (uint8_t *message)
 	{
 		case MIDI_CABLE_0: pQueue = &MIDI_UART_Queue_Tx1; break;
 		case MIDI_CABLE_1: pQueue = &MIDI_UART_Queue_Tx2; break;
+
+#ifndef STM32F103x6
 		case MIDI_CABLE_2: pQueue = &MIDI_UART_Queue_Tx3; break;
+#endif
 		default: break;
 	}
 	if (pQueue)
@@ -165,13 +181,17 @@ void 	MIDI_Init		(void)
 {
 	MIDI_UART_Queue_Init(&MIDI_UART_Queue_Tx1);
 	MIDI_UART_Queue_Init(&MIDI_UART_Queue_Tx2);
+#ifndef STM32F103x6 
 	MIDI_UART_Queue_Init(&MIDI_UART_Queue_Tx3);
+#endif
 	MIDI_USB_Queue_Init (&MIDI_USB_Queue_DataIn);
 	MIDI_USB_Queue_Init (&MIDI_USB_Queue_DataOut);
 
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
+#ifndef STM32F103x6 
 	MX_USART3_UART_Init();
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -240,6 +260,7 @@ void MX_USART2_UART_Init(void)
 	}
 }
 
+#ifndef STM32F103x6 
 void MX_USART3_UART_Init(void)
 {
 	huart3.Instance = USART3;
@@ -255,5 +276,6 @@ void MX_USART3_UART_Init(void)
 		Error_Handler();
 	}
 }
+#endif
 
 // -----------------------------------------------------------------------------

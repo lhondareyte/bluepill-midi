@@ -3,7 +3,9 @@
 
 MIDI_UART_Queue_TypeDef		MIDI_UART_Queue_Tx1;
 MIDI_UART_Queue_TypeDef		MIDI_UART_Queue_Tx2;
+#ifndef STM32F103x6
 MIDI_UART_Queue_TypeDef		MIDI_UART_Queue_Tx3;
+#endif
 
 MIDI_USB_Queue_TypeDef		MIDI_USB_Queue_DataIn;
 MIDI_USB_Queue_TypeDef		MIDI_USB_Queue_DataOut;

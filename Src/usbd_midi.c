@@ -298,7 +298,11 @@ __ALIGN_BEGIN static uint8_t USBD_MIDI_CfgDesc[USB_MIDI_CONFIG_DESC_SIZE] __ALIG
 	/*  Endpoint Descriptor Length             */ 0x07u,
 	/*  DescriptorType: CS_ENDPOINT            */ 0x25u,
 	/*  bDescriptorSubtype                     */ 0x01u,
+#ifdef STM32F103x6
+	/*  bNumEmbMIDIJack                        */ 0x02u,
+#else
 	/*  bNumEmbMIDIJack                        */ 0x03u,
+#endif
 	/*  baAssocJackID                          */ 0x03u, 0x07u, 0x0Bu,
 	/*********************************************************************
 	* Endpoint Descriptor
@@ -317,7 +321,11 @@ __ALIGN_BEGIN static uint8_t USBD_MIDI_CfgDesc[USB_MIDI_CONFIG_DESC_SIZE] __ALIG
 	/*  Endpoint Descriptor Length             */ 0x07u,
 	/*  DescriptorType: CS_ENDPOINT            */ 0x25u,
 	/*  bDescriptorSubtype                     */ 0x01u,
+#ifdef STM32F103x6
+	/*  bNumEmbMIDIJack                        */ 0x02u,
+#else
 	/*  bNumEmbMIDIJack                        */ 0x03u,
+#endif
 	/*  baAssocJackID                          */ 0x01u, 0x05u, 0x09u
 };
 

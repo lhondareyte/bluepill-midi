@@ -28,7 +28,9 @@ int main(void)
 
 	MIDI_UART_Receive_IT(&huart1);
 	MIDI_UART_Receive_IT(&huart2);
+#ifndef STM32F103x6
 	MIDI_UART_Receive_IT(&huart3);
+#endif
 
 	while (1)
 	{

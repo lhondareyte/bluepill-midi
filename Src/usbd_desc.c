@@ -7,16 +7,23 @@
 #define USBD_LANGID_STRING     			1033
 #define USBD_MANUFACTURER_STRING    	"Neutrino"
 #define USBD_PRODUCT_STRING_FS     		"Neutrino USB-MIDI"
+#ifdef STM32F103x6
+#define USBD_CONFIGURATION_STRING_FS    "USB-MIDI 2x2 adapter"
+#define USBD_INTERFACE_STRING_FS		"Jack i/o"
+#define USBD_STR_4_INTERFACE	"USB-MIDI 2in 2out"
+#else
 #define USBD_CONFIGURATION_STRING_FS    "USB-MIDI 3x3 adapter"
 #define USBD_INTERFACE_STRING_FS		"Jack i/o"
-
 #define USBD_STR_4_INTERFACE	"USB-MIDI 3in 3out"
+#endif
 #define USBD_STR_5_INPUT1		"Input _A_"
 #define USBD_STR_6_OUTPUT1		"Output _A_"
 #define USBD_STR_7_UNPUT2		"Input _B_"
 #define USBD_STR_8_OUTPUT2		"Output _B_"
+#ifndef STM32F103x6
 #define USBD_STR_9_INPUT3		"Input _C_"
 #define USBD_STR_A_OUTPUT3		"Output _C_"
+#endif
 #define USBD_STR_UNKNOWN		"----------"
 
 uint8_t USBD_SERIALNUMBER_STRING_FS[]   =  "000_000_000_000_000_000_0";
@@ -63,12 +70,14 @@ uint8_t  * USBD_GetUserDectriptor (struct _USBD_HandleTypeDef *pdev ,uint8_t ind
 	case 8:
 		USBD_GetString((uint8_t *) USBD_STR_8_OUTPUT2, 		USBD_StrDesc, length);
 		break;
+#ifndef STM32F103x6
 	case 9:
 		USBD_GetString((uint8_t *) USBD_STR_9_INPUT3, 		USBD_StrDesc, length);
 		break;
 	case 10:
 		USBD_GetString((uint8_t *) USBD_STR_A_OUTPUT3, 		USBD_StrDesc, length);
 		break;
+#endif
 	default:
 		USBD_GetString((uint8_t *) USBD_STR_UNKNOWN, 		USBD_StrDesc, length);
 		break;
